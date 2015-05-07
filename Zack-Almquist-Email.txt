@@ -1,0 +1,58 @@
+install.tract("windows") Issue
+
+Manual Workaround:
+install.packages("UScensus2010tract", repos = "http://lakshmi.calit2.uci.edu/census2000/R/", type = "source")
+
+From: Zack Almquist [mailto:almquist@umn.edu]
+Sent: Wednesday, September 10, 2014 12:30
+To: Glynn, Earl
+Subject: Re: Question about install.tract("windows")
+
+Hi Earl,
+
+Yeah that just needs to be updated, it should work fine no problem.
+
+Best
+
+-- Zack
+---------------------------------------------------------
+Zack W.  Almquist
+Assistant Professor
+Department of Sociology and School of Statistics
+Affiliate, Minnesota Population Center
+University of Minnesota
+
+On Wed, Sep 10, 2014 at 12:25 PM, Glynn, Earl <glynne@umkc.edu> wrote:
+Zack:
+
+I see this on my Windows box:
+
+> library(UScensus2010)
+> install.tract("windows")
+Error in install.tract("windows") : Not Available Yet
+
+I found this in the source code for install.tract:
+
+if (x == "windows") {
+        rVer <- as.numeric(R.Version()$minor)
+        if (rVer >= 11) {
+            install.packages("UScensus2010tract", repos = "http://lakshmi.calit2.uci.edu/census2000/R/",
+                type = "source")
+            return()
+        }
+        else {
+            stop("Not Available Yet")
+        }
+
+Was the R.Version()$minor check above for $R.Version()$major == 2?
+
+Should the install.packages statement above be OK for  "R version 3.1.0 (2014-04-10)"?
+
+Thanks for clarifying this.
+
+And thanks for creating these US Census packages for R.
+
+Earl F Glynn
+Principal Programmer/Analyst
+Center for Health Insights o University of Missouri - Kansas City
+

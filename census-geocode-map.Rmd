@@ -5,9 +5,32 @@ This example starts with a street address and then displays two maps:
  - state and county of interest,
  - census tracts within county of interest.
 
-Useful background info about 2000 Census, but most is applicable to 2010: [US Census Spatial and Demographic Data in R](http://www.r-project.org/conferences/useR-2010/slides/Almquist.pdf).
+Earl F Glynn, UMKC Center for Health Insights, 2014-10-27.  Updated 2015-05-07. 
 
-Earl F Glynn, UMKC Center for Health Insights, 2014-10-27. 
+### Windows Workaround
+
+Install [R package UScensus2010](http://cran.r-project.org/web/packages/UScensus2010/index.html) normally from CRAN.
+
+This package provides helper function `install.tract` to install census tract data, but some Windows versions have an error that makes `install.tract` fail.  (The function only checks R minor version, instead of major and minor versions, and only performs installs if R.Version()$minor is >= 11.)
+
+To get around this bug in Windows, manually enter this:
+
+```
+install.packages("UScensus2010tract", repos = "http://lakshmi.calit2.uci.edu/census2000/R/", type = "source")
+```
+
+See [E-mail exchange](Zack-Almquist-Email.txt) with package author Zack W. Almquist About this issue. 
+
+### US Census API
+
+The R example below uses the US Census API to find the census tract for a given street address.
+
+For background on this API:
+
+* [US Census Geocoder](http://geocoding.geo.census.gov/geocoder/)
+
+* [Geocoding Services Web Application Programming Interface (API)](http://geocoding.geo.census.gov/geocoder/Geocoding_Services_API.pdf)
+
 
 ### Setup
 ```{r setup}
@@ -38,7 +61,9 @@ state  <- "MO"
 
 ### Output from US Census Geocoder
 
-Form URL for [US Census geocoder](# http://geocoding.geo.census.gov/geocoder/) and parse JSON output:
+The output from the online US Census Geocoder [can be seen here](http://geocoding.geo.census.gov/geocoder/geographies/onelineaddress?address=2411+Holmes+St%2C+Kansas+City%2C+MO&benchmark=4&vintage=4).
+
+Form URL for US Census geocoder and parse JSON output:
 ```{r geocoder}
 GEOCODE.PREFIX <- "http://geocoding.geo.census.gov/geocoder/geographies/address?street="
 GEOCODE.SUFFIX <- "&benchmark=Public_AR_Census2010&vintage=Census2010_Census2010&layers=14&format=json"
@@ -91,6 +116,8 @@ target.geoid
 ```
 
 ### State and County Map
+
+See useful background info about creating maps from 2000 Censusdata --most of the info is applicable to 2010 census data, too: [US Census Spatial and Demographic Data in R](http://www.r-project.org/nosvn/conferences/useR-2010.old/slides/Almquist.pdf).
 
 ```{r statemap}
 library(maps)
@@ -149,7 +176,7 @@ eval(R.parse)
 
 ```{r countymap2}
 county.coordinates <- county(name=county.name, state=target.stateabbr, level="tract")
-plot(county.coordinates, main=county.name.full)
+plot(county.coordinates) 
 title(paste0(county.name.full, ", ", target.stateabbr), col.main="blue", cex.main=1.5)
 
 plot(state.tract10,
